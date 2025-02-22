@@ -3,7 +3,7 @@ package com.stellar.calculator.validation;
 import java.util.function.Predicate;
 
 /**
- * Generic validator for checking conditions with custom error messages.
+ * Generic validator utility for checking conditions with custom error messages.
  * Provides a fluent interface for combining validation rules.
  * 
  * @author Ahmed Ghannam
