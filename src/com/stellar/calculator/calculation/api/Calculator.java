@@ -1,8 +1,8 @@
 package com.stellar.calculator.calculation.api;
 
 /**
- * Base interface for all stellar calculators. Defines the contract for
- * performing calculations on stellar objects.
+ * Base interface for all calculators used across the application. Defines the
+ * contract for performing calculations on stellar objects.
  *
  * @param <T> the type of the input parameter
  * @param <R> the type of the calculation result
