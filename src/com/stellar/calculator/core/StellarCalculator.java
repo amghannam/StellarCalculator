@@ -17,7 +17,7 @@ public class StellarCalculator {
 	 * Application entry point. Initializes services and starts the calculation
 	 * process.
 	 *
-	 * @param args command line arguments (not used)
+	 * @param args command line arguments (unused)
 	 */
 	public static void main(String[] args) {
 		var orchestrator = new CalculationOrchestrator(new InputReader(), 
