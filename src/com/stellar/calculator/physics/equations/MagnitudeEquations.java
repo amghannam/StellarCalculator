@@ -1,8 +1,5 @@
 package com.stellar.calculator.physics.equations;
 
-import static java.lang.Math.log10;
-import static java.lang.Math.pow;
-
 import com.stellar.calculator.physics.constants.SolarSystemConstants;
 
 /**
@@ -24,10 +21,10 @@ public final class MagnitudeEquations {
 	 */
 	public static double calculateApparentMagnitude(double radiusInSol, double temperature) {
 		// Calculate luminosity relative to Sun
-		double luminosity = pow(radiusInSol, 2) * pow(temperature / SolarSystemConstants.SOLAR_TEMPERATURE, 4);
+		double luminosity = Math.pow(radiusInSol, 2) * Math.pow(temperature / SolarSystemConstants.SOLAR_TEMPERATURE, 4);
 
 		// Calculate apparent magnitude
 		// M = -2.5 log10(L/L☉) + M☉
-		return -2.5 * log10(luminosity) + SolarSystemConstants.SOLAR_APPARENT_MAG;
+		return -2.5 * Math.log10(luminosity) + SolarSystemConstants.SOLAR_APPARENT_MAG;
 	}
 }

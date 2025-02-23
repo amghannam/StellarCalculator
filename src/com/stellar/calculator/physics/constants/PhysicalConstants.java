@@ -8,6 +8,7 @@ package com.stellar.calculator.physics.constants;
  * @version 1.0
  */
 public final class PhysicalConstants {
+	
 	private PhysicalConstants() {
 	}
 
