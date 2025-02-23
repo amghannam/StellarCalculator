@@ -11,7 +11,7 @@ import com.stellar.calculator.validation.InputValidator;
  * @author Ahmed Ghannam
  * @version 1.0
  */
-public class InputReader implements AutoCloseable {
+public class InputReader {
 	private final Scanner scanner;
 	private final InputValidator validator;
 
@@ -24,9 +24,7 @@ public class InputReader implements AutoCloseable {
 		displayWelcomeMessage();
 
 		double mass = readDouble("- Enter the star's mass (in solar masses): ", validator::validateMass);
-
 		double radius = readDouble("- Enter the star's radius (in solar radii): ", validator::validateRadius);
-
 		double temp = readDouble("- Enter the star's surface temperature (in Kelvin): ",
 				validator::validateTemperature);
 
@@ -52,10 +50,5 @@ public class InputReader implements AutoCloseable {
 				System.out.println(e.getMessage());
 			}
 		}
-	}
-
-	@Override
-	public void close() {
-		scanner.close();
 	}
 }
