@@ -43,9 +43,9 @@ public class StellarCalculationService implements CalculationService {
 		registerCalculator(new HabitableZoneCalculator());
 		registerCalculator(new EarthEquivalentDistanceCalculator());
 		registerCalculator(new OrbitalPeriodCalculator());
-		registerCalculator(new IrradianceCalculator());
 		registerCalculator(new ApparentMagnitudeCalculator());
 		registerCalculator(new AngularSizeCalculator());
+		registerCalculator(new IrradianceCalculator());
 	}
 
 	/**

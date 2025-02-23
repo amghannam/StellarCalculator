@@ -23,10 +23,10 @@ public record IrradianceResult(double irradiance) implements CalculationResult {
 		String radiationLevel = formatIrradianceValue();
 		double percentOfEarth = (irradiance / SolarSystemConstants.SOLAR_CONSTANT) * 100;
 		return String.format("""
-				Radiation at 1 AU Distance
+				Radiation at 1 AU
 				%s
 				Comparison: %.1f%% of Earth's solar radiation
-				(Measured at the same distance as Earth from the Sun)""", radiationLevel, percentOfEarth);
+				(How irradiated a planet would be at 1 AU from this star relative to Earth)""", radiationLevel, percentOfEarth);
 	}
 
 	private String formatIrradianceValue() {
