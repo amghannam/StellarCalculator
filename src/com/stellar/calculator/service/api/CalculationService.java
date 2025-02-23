@@ -14,6 +14,7 @@ import com.stellar.calculator.domain.model.Star;
  * @version 1.0
  */
 public interface CalculationService {
+	
 	/**
 	 * Performs all registered calculations for a star.
 	 *
