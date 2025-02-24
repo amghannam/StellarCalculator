@@ -16,20 +16,7 @@ public final class ThermalEquations {
 	}
 
 	/**
-	 * Calculates total radiant flux using Stefan-Boltzmann law.
-	 *
-	 * @param radiusInSol the star radius in solar radii
-	 * @param temperature the surface temperature in Kelvin
-	 * @return the total radiant flux in watts
-	 */
-	public static double calculateRadiantFlux(double radiusInSol, double temperature) {
-		double radius = radiusInSol * SolarSystemConstants.SOLAR_RADIUS;
-		double surfaceArea = 4 * Math.PI * radius * radius;
-		return PhysicalConstants.STEFAN_BOLTZMANN * surfaceArea * Math.pow(temperature, 4);
-	}
-
-	/**
-	 * Calculates irradiance at a specific distance from a star.
+	 * Calculates the incident radiation at a specific distance from a star.
 	 *
 	 * @param radiusInSol  the star radius in solar radii
 	 * @param temperature  the surface temperature in Kelvin
@@ -38,12 +25,21 @@ public final class ThermalEquations {
 	 */
 	public static double calculateIrradianceAtDistance(double radiusInSol, double temperature, double distanceInAU) {
 		double totalFlux = calculateRadiantFlux(radiusInSol, temperature);
-		double distance = auToMeters(distanceInAU);
-		double surfaceArea = 4 * Math.PI * distance * distance;
+		double distance = distanceInAU * SolarSystemConstants.AU; // Convert to meters
+		double surfaceArea = 4 * Math.PI * Math.pow(distance, 2);
 		return totalFlux / surfaceArea;
 	}
 
-	private static double auToMeters(double au) {
-		return au * SolarSystemConstants.AU;
+	/**
+	 * Calculates the total radiant flux using the Stefan-Boltzmann law.
+	 *
+	 * @param radiusInSol the star radius in solar radii
+	 * @param temperature the surface temperature in Kelvin
+	 * @return the total radiant flux in watts
+	 */
+	public static double calculateRadiantFlux(double radiusInSol, double temperature) {
+		double radius = radiusInSol * SolarSystemConstants.SOLAR_RADIUS;
+		double surfaceArea = 4 * Math.PI * Math.pow(radius, 2);
+		return PhysicalConstants.STEFAN_BOLTZMANN * surfaceArea * Math.pow(temperature, 4);
 	}
 }

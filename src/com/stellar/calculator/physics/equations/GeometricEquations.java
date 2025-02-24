@@ -3,8 +3,7 @@ package com.stellar.calculator.physics.equations;
 import com.stellar.calculator.physics.constants.SolarSystemConstants;
 
 /**
- * Geometric calculations for stellar observations. Includes angular size and
- * distance-related calculations.
+ * Geometric calculations for stellar observations.
  * 
  * @author Ahmed Ghannam
  * @version 1.0
@@ -23,17 +22,7 @@ public final class GeometricEquations {
 	 */
 	public static double calculateAngularSize(double radiusInSol, double distanceInAU) {
 		double radius = radiusInSol * SolarSystemConstants.SOLAR_RADIUS;
-		double distance = distanceInAU * SolarSystemConstants.AU;
+		double distance = distanceInAU * SolarSystemConstants.AU; // Convert to meters
 		return 2 * Math.toDegrees(Math.atan(radius / distance));
-	}
-
-	/**
-	 * Converts a distance from astronomical units to meters.
-	 *
-	 * @param distanceInAU the distance in astronomical units
-	 * @return the distance in meters
-	 */
-	public static double auToMeters(double distanceInAU) {
-		return distanceInAU * SolarSystemConstants.AU;
 	}
 }
