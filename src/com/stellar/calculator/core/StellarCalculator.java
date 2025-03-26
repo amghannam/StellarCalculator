@@ -13,6 +13,7 @@ import com.stellar.calculator.service.orchestration.CalculationOrchestrator;
  * @version 1.0
  */
 public class StellarCalculator {
+	
 	/**
 	 * Application entry point. Initializes services and starts the calculation
 	 * process.
