@@ -20,7 +20,7 @@ public interface Calculator<T, R extends CalculationResult> {
 	R calculate(T input);
 
 	/**
-	 * Returns a description of what this calculator computes.
+	 * Returns a description of what this calculator primarily computes.
 	 * 
 	 * @return calculator the calculation description
 	 */
