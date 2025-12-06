@@ -29,8 +29,8 @@ public record HabitableZoneResult(double innerBoundary, double outerBoundary) im
 	public String format() {
 		return String.format("""
 				Theoretical Habitable Zone Boundaries
-				Inner boundary: %.2f AU (too hot beyond this point)
-				Outer boundary: %.2f AU (too cold beyond this point)
+				Inner boundary: %.2f AU (closer than this is too hot)
+				Outer boundary: %.2f AU (farther than this is too cold)
 				For reference: Earth orbits at 1.0 AU""", innerBoundary, outerBoundary);
 	}
 

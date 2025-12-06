@@ -5,7 +5,7 @@ import com.stellar.calculator.domain.model.Star;
 import com.stellar.calculator.physics.equations.MagnitudeEquations;
 
 /**
- * Calculates the apparent magnitude of a star at Earth-equivalent distance.
+ * Calculates the apparent magnitude of a star at a fixed distance of 1 AU.
  * 
  * <p>
  * The apparent magnitude is a measure of a star's brightness as seen by an
@@ -23,7 +23,7 @@ import com.stellar.calculator.physics.equations.MagnitudeEquations;
  * </ul>
  * 
  * @author Ahmed Ghannam
- * @version 1.0
+ * @version 1.1
  * @see ApparentMagnitudeResult
  * @see com.stellar.calculator.physics.equations.MagnitudeEquations
  */

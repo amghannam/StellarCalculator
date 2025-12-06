@@ -14,14 +14,17 @@ public final class MagnitudeEquations {
 	}
 
 	/**
-	 * Calculates the apparent magnitude of a star as seen from an Earth-equivalent
-	 * distance. Uses the relationship between luminosity and magnitude.
+	 * Calculates the apparent magnitude of a star as seen from a fixed distance of
+	 * 1 AU. Uses the relationship between luminosity and magnitude.
 	 * 
+	 * @param radiusInSol the star's radius in solar radii
+	 * @param temperature the star's temperature in K
 	 * @return the apparent magnitude in degrees
 	 */
 	public static double calculateApparentMagnitude(double radiusInSol, double temperature) {
 		// Calculate luminosity relative to Sun
-		double luminosity = Math.pow(radiusInSol, 2) * Math.pow(temperature / SolarSystemConstants.SOLAR_TEMPERATURE, 4);
+		double luminosity = Math.pow(radiusInSol, 2)
+				* Math.pow(temperature / SolarSystemConstants.SOLAR_TEMPERATURE, 4);
 
 		// Calculate apparent magnitude
 		// M = -2.5 log10(L/L☉) + M☉

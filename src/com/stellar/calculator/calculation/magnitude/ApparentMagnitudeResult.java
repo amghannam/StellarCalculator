@@ -22,30 +22,29 @@ import com.stellar.calculator.physics.constants.SolarSystemConstants;
  * 
  * @param magnitude the calculated apparent magnitude value
  * @author Ahmed Ghannam
- * @version 1.0
+ * @version 1.1
  * @see ApparentMagnitudeCalculator
  */
 public record ApparentMagnitudeResult(double magnitude) implements CalculationResult {
 	@Override
 	public String format() {
-		double brightnessFactor;
-		String comparison;
-
-		// Calculate how many times brighter/dimmer than the Sun
 		double magDiff = SolarSystemConstants.SOLAR_APPARENT_MAG - magnitude;
-		brightnessFactor = Math.pow(2.512, magDiff);
+		double brightnessFactor = Math.pow(2.512, magDiff);
 
-		if (brightnessFactor > 1) {
+		String comparison;
+		if (Math.abs(brightnessFactor - 1.0) < 0.05) {
+			comparison = "About as bright as the Sun";
+		} else if (brightnessFactor > 1.0) {
 			comparison = String.format("%.1f times brighter than the Sun", brightnessFactor);
 		} else {
 			comparison = String.format("%.1f times dimmer than the Sun", 1 / brightnessFactor);
 		}
 
 		return String.format("""
-				Apparent Magnitude at Earth-equivalent Distance
+				Apparent Magnitude at 1 AU
 				Magnitude: %.2f
 				%s
-				(As it would appear in Earth's sky)""", magnitude, comparison);
+				(As it would appear from a distance of 1 AU)""", magnitude, comparison);
 	}
 
 	@Override
