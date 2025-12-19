@@ -45,11 +45,25 @@ public final class LuminosityClassCalculator implements Calculator<Star, Luminos
 		double lExpectedMs = estimateMainSequenceLuminosityFromMass(m);
 		double deltaLogMs = Math.log10(lSolar / lExpectedMs);
 
-		var detection = LuminosityClassHeuristics.detect(m, r, t, lSolar, logL, deltaLogMs);
+		var inputs = new LuminosityClassHeuristics.LuminosityClassInputs(
+				m,          // massSolar
+				r,          // radiusSolar
+				t,          // temperatureK
+				lSolar,     // luminositySolar
+				logL,       // log10(L/Lsun)
+				deltaLogMs  // ΔlogL_MS
+		);
 
-		return new LuminosityClassResult(detection.luminosityClass(), detection.confidence(), 
-				lSolar, r, t, m, deltaLogMs, detection.rationale());
+		var detection = LuminosityClassHeuristics.detect(inputs);
+
+		return new LuminosityClassResult(
+				detection.luminosityClass(),
+				detection.confidence(),
+				lSolar, r, t, m, deltaLogMs,
+				detection.rationale()
+		);
 	}
+
 
 	@Override
 	public String getDescription() {
