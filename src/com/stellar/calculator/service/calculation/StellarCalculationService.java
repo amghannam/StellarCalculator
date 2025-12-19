@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import com.stellar.calculator.calculation.angular.AngularSizeCalculator;
 import com.stellar.calculator.calculation.api.CalculationResult;
 import com.stellar.calculator.calculation.api.Calculator;
+import com.stellar.calculator.calculation.classification.LuminosityClassCalculator;
+import com.stellar.calculator.calculation.classification.SpectralClassCalculator;
 import com.stellar.calculator.calculation.luminosity.LuminosityCalculator;
 import com.stellar.calculator.calculation.magnitude.ApparentMagnitudeCalculator;
 import com.stellar.calculator.calculation.orbital.OrbitalPeriodCalculator;
@@ -46,6 +48,8 @@ public class StellarCalculationService implements CalculationService {
 		registerCalculator(new AngularSizeCalculator());
 		registerCalculator(new ApparentMagnitudeCalculator());
 		registerCalculator(new IrradianceCalculator());
+		registerCalculator(new SpectralClassCalculator());
+		registerCalculator(new LuminosityClassCalculator());
 	}
 
 	/**
@@ -59,9 +63,7 @@ public class StellarCalculationService implements CalculationService {
 	@Override
 	public List<CalculationResult> calculateAll(Star star) {
 		Objects.requireNonNull(star, "star cannot be null");
-		return calculators.stream()
-				.map(c -> c.calculate(star))
-				.collect(Collectors.toList());
+		return calculators.stream().map(c -> c.calculate(star)).collect(Collectors.toList());
 	}
 
 	/**
