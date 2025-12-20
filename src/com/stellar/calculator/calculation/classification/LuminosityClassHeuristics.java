@@ -1,6 +1,9 @@
 package com.stellar.calculator.calculation.classification;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -19,12 +22,11 @@ import java.util.function.Function;
  * </p>
  *
  * @author Ahmed Ghannam
- * @version 1.1
+ * @version 1.2
  */
 final class LuminosityClassHeuristics {
 
-	private LuminosityClassHeuristics() {
-	}
+	private LuminosityClassHeuristics() {}
 
 	private static final double MS_DELTA_STRICT = 0.60;
 	private static final double SD_DELTA = -0.60;
@@ -37,22 +39,18 @@ final class LuminosityClassHeuristics {
 			Rule.of(LuminosityClass.III, 10.0, 2.5, 15.0, 0.70, 0.80,
 					"Expanded radius and elevated luminosity consistent with giants."),
 			Rule.of(LuminosityClass.IV, 3.0, 1.2, 4.0, 0.60, 0.70,
-					"Moderately expanded radius suggests subgiant evolution.") };
+					"Moderately expanded radius suggests subgiant evolution.")
+	};
 
 	/**
 	 * Detects an MK luminosity class using a sequence of heuristics (first match
 	 * wins).
 	 *
 	 * <p>
-	 * <b>Signals used today:</b> {@link LuminosityClassInputs#radiusSolar()},
-	 * {@link LuminosityClassInputs#logL()},
-	 * {@link LuminosityClassInputs#deltaLogMainSequence()}.
+	 * <b>Signals used today:</b> radius, log luminosity, and main-sequence delta.
 	 * </p>
-	 *
 	 * <p>
 	 * <b>Signals carried for future refinement:</b> mass, temperature, luminosity.
-	 * Keeping them here prevents the calculator layer from accumulating ad-hoc
-	 * parameters as the heuristics evolve.
 	 * </p>
 	 *
 	 * @param in aggregated physical inputs required for luminosity class detection
@@ -63,52 +61,47 @@ final class LuminosityClassHeuristics {
 	static Detection detect(LuminosityClassInputs in) {
 		Objects.requireNonNull(in, "in");
 
-		// Pipeline keeps precedence explicit and avoids a long if/else ladder.
-		var pipeline = DetectionPipeline.of(LuminosityClassHeuristics::whiteDwarf,
-				LuminosityClassHeuristics::mainSequence, 
+		// Precedence matters: first match wins.
+		var pipeline = DetectionPipeline.of(
+				LuminosityClassHeuristics::whiteDwarf,
+				LuminosityClassHeuristics::mainSequence,
 				LuminosityClassHeuristics::subdwarf,
-				LuminosityClassHeuristics::evolved); // e.g. giants, subgiants, etc. 
+				LuminosityClassHeuristics::evolved  // e.g. giants, subgiants, etc.
+		);
 
 		return pipeline.firstOrDefault(in, defaultDwarf());
 	}
 
 	// -- Individual detectors ----------------------------------------------------
 
-	private static Detection whiteDwarf(LuminosityClassInputs in) {
-		if (!(in.radiusSolar() < 0.05 && in.logL() < -1.0))
-			return null;
+	private static Optional<Detection> whiteDwarf(LuminosityClassInputs in) {
+		if (!(in.radiusSolar() < 0.05 && in.logL() < -1.0)) return Optional.empty();
 
-		// Stronger evidence (smaller radius, lower luminosity) increases confidence.
 		double conf = clamp01(0.75 + 0.25 * strong(in.radiusSolar(), 0.05) * strong(-in.logL(), 1.0));
-		return new Detection(LuminosityClass.VII, conf,
-				"Very small radius and low luminosity suggest a compact object (white dwarf regime).");
+		return Optional.of(new Detection(LuminosityClass.VII, conf,
+				"Very small radius and low luminosity suggest a compact object (white dwarf regime)."));
 	}
 
-	private static Detection mainSequence(LuminosityClassInputs in) {
-		if (!isRadiusInMainSequenceWindow(in.radiusSolar()))
-			return null;
-		if (Math.abs(in.deltaLogMainSequence()) > MS_DELTA_STRICT)
-			return null;
+	private static Optional<Detection> mainSequence(LuminosityClassInputs in) {
+		if (!isRadiusInMainSequenceWindow(in.radiusSolar())) return Optional.empty();
+		if (Math.abs(in.deltaLogMainSequence()) > MS_DELTA_STRICT) return Optional.empty();
 
 		double conf = 0.70 + 0.30 * (1.0 - Math.min(1.0, Math.abs(in.deltaLogMainSequence()) / MS_DELTA_STRICT));
-		return new Detection(LuminosityClass.V, clamp01(conf),
-				"Consistent with the main-sequence mass–luminosity baseline (|ΔlogL_MS| ≤ 0.6).");
+		return Optional.of(new Detection(LuminosityClass.V, clamp01(conf),
+				"Consistent with the main-sequence mass–luminosity baseline (|ΔlogL_MS| ≤ 0.6)."));
 	}
 
-	private static Detection subdwarf(LuminosityClassInputs in) {
-		if (!(in.deltaLogMainSequence() <= SD_DELTA && in.radiusSolar() < 1.5))
-			return null;
+	private static Optional<Detection> subdwarf(LuminosityClassInputs in) {
+		if (!(in.deltaLogMainSequence() <= SD_DELTA && in.radiusSolar() < 1.5)) return Optional.empty();
 
 		double conf = 0.65 + 0.25 * (1.0 - Math.min(1.0, Math.abs(in.deltaLogMainSequence()) / 1.5));
-		return new Detection(LuminosityClass.VI, clamp01(conf),
-				"Under-luminous for its mass with a compact radius suggests a subdwarf (metal-poor/high-gravity) regime.");
+		return Optional.of(new Detection(LuminosityClass.VI, clamp01(conf),
+				"Under-luminous for its mass with a compact radius suggests a subdwarf (metal-poor/high-gravity) regime."));
 	}
 
-	private static Detection evolved(LuminosityClassInputs in) {
-		Rule rule = firstMatch(EVOLVED_RULES, in.radiusSolar(), in.logL());
-		if (rule == null)
-			return null;
-		return new Detection(rule.luminosityClass(), rule.confidence(in.radiusSolar()), rule.rationale());
+	private static Optional<Detection> evolved(LuminosityClassInputs in) {
+		return firstMatch(EVOLVED_RULES, in.radiusSolar(), in.logL())
+				.map(rule -> new Detection(rule.luminosityClass(), rule.confidence(in.radiusSolar()), rule.rationale()));
 	}
 
 	// -- Shared helpers ----------------------------------------------------------
@@ -122,12 +115,11 @@ final class LuminosityClassHeuristics {
 		return radiusSolar >= 0.10 && radiusSolar <= 15.0;
 	}
 
-	private static Rule firstMatch(Rule[] rules, double radiusSolar, double logL) {
-		for (Rule r : rules) {
-			if (r.matches(radiusSolar, logL))
-				return r;
-		}
-		return null;
+	private static Optional<Rule> firstMatch(Rule[] rules, double radiusSolar, double logL) {
+		// Streams keep the method expression-based while preserving "first match wins".
+		return Arrays.stream(rules)
+				.filter(r -> r.matches(radiusSolar, logL))
+				.findFirst();
 	}
 
 	private static double strong(double value, double threshold) {
@@ -144,31 +136,32 @@ final class LuminosityClassHeuristics {
 	/**
 	 * Parameter object for luminosity class detection.
 	 *
-	 * <p>
-	 * This eliminates the "many doubles" signature and gives each signal a name.
-	 * </p>
+	 * <p>This eliminates the "many doubles" signature and gives each signal a name.</p>
 	 */
-	record LuminosityClassInputs(double massSolar, 
-			double radiusSolar, 
-			double temperatureK, 
+	record LuminosityClassInputs(
+			double massSolar,
+			double radiusSolar,
+			double temperatureK,
 			double luminositySolar,
-			double logL, 
-			double deltaLogMainSequence) {
-	}
+			double logL,
+			double deltaLogMainSequence
+	) {}
 
-	private record Rule(LuminosityClass luminosityClass, 
-			double radiusMin, 
-			double logLMin, 
+	private record Rule(
+			LuminosityClass luminosityClass,
+			double radiusMin,
+			double logLMin,
 			double radiusHighForConf,
-			double confLow, 
-			double confHigh, 
-			String rationale) {
-		static Rule of(LuminosityClass lc, 
-				double radiusMin, 
-				double logLMin, 
+			double confLow,
+			double confHigh,
+			String rationale
+	) {
+		static Rule of(LuminosityClass lc,
+				double radiusMin,
+				double logLMin,
 				double radiusHighForConf,
 				double confLow,
-				double confHigh, 
+				double confHigh,
 				String rationale) {
 			return new Rule(lc, radiusMin, logLMin, radiusHighForConf, confLow, confHigh, rationale);
 		}
@@ -182,24 +175,22 @@ final class LuminosityClassHeuristics {
 		}
 	}
 
-	private record DetectionPipeline(Function<LuminosityClassInputs, Detection>[] steps) {
+	private record DetectionPipeline(List<Function<LuminosityClassInputs, Optional<Detection>>> steps) {
 
 		@SafeVarargs
-		static DetectionPipeline of(Function<LuminosityClassInputs, Detection>... steps) {
+		static DetectionPipeline of(Function<LuminosityClassInputs, Optional<Detection>>... steps) {
 			Objects.requireNonNull(steps, "steps");
-			return new DetectionPipeline(steps);
+			return new DetectionPipeline(List.of(steps));
 		}
 
 		Detection firstOrDefault(LuminosityClassInputs in, Detection fallback) {
-			for (Function<LuminosityClassInputs, Detection> step : steps) {
-				var d = step.apply(in);
-				if (d != null)
-					return d;
-			}
-			return fallback;
+			return steps.stream()
+					.map(step -> step.apply(in))
+					.flatMap(Optional::stream)
+					.findFirst()
+					.orElse(fallback);
 		}
 	}
 
-	record Detection(LuminosityClass luminosityClass, double confidence, String rationale) {
-	}
+	record Detection(LuminosityClass luminosityClass, double confidence, String rationale) {}
 }
