@@ -64,7 +64,6 @@ public final class LuminosityClassCalculator implements Calculator<Star, Luminos
 		);
 	}
 
-
 	@Override
 	public String getDescription() {
 		return "Estimated MK luminosity class using radius/luminosity heuristics";

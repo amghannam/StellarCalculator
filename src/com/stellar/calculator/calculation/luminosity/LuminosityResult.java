@@ -26,7 +26,7 @@ public record LuminosityResult(double luminosity) implements CalculationResult {
 	public String format() {
 		return String.format("""
 				Total Stellar Luminosity
-				Output: %.3f times solar luminosity
+				Output: %.3f L☉
 				(Total energy output compared to our Sun)""", luminosity);
 	}
 

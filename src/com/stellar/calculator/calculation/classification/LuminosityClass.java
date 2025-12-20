@@ -17,13 +17,44 @@ package com.stellar.calculator.calculation.classification;
  * @version 1.0
  */
 public enum LuminosityClass {
+	/**
+	 * Denotes supergiants.
+	 */
 	I("I"),
+	
+	/**
+	 * Denotes bright giants.
+	 */
 	II("II"),
+	
+	/**
+	 * Denotes giants.
+	 */
 	III("III"),
+	
+	/**
+	 * Denotes subgiants.
+	 */
 	IV("IV"),
+	
+	/**
+	 * Denotes main sequence stars (dwarfs).
+	 */
 	V("V"),
+	
+	/**
+	 * Denotes subdwarfs.
+	 */
 	VI("VI"),
+	
+	/**
+	 * Denotes white dwarfs.
+	 */
 	VII("VII"),
+	
+	/**
+	 * Indicates that a luminosity class is inconclusive or otherwise unknown.
+	 */
 	UNKNOWN("?");
 
 	private final String mkLabel;

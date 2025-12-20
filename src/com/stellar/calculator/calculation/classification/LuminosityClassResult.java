@@ -47,7 +47,7 @@ public record LuminosityClassResult(
 				Luminosity Class (Estimated)
 				Output: %s
 				Confidence: %.0f%%
-				Inputs: M=%.2f M☉, R=%.2f R☉, T=%.0f K
+				Inputs: M=%.2f M☉, R=%.2f R☉, T=%.0fK
 				Derived: L=%.3f L☉ (ΔlogL_MS=%.2f)
 				%s""",
 				luminosityClass.mkLabel(),

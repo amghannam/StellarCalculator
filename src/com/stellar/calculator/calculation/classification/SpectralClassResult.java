@@ -15,9 +15,11 @@ public record SpectralClassResult(SpectralType type, int subtype, double tempera
 		if (type == null) {
 			throw new IllegalArgumentException("type cannot be null");
 		}
+		
 		if (subtype < 0 || subtype > 9) {
 			throw new IllegalArgumentException("subtype must be between 0 and 9");
 		}
+		
 		if (temperatureK <= 0) {
 			throw new IllegalArgumentException("temperature must be positive");
 		}
@@ -37,7 +39,7 @@ public record SpectralClassResult(SpectralType type, int subtype, double tempera
 		return String.format("""
 				Spectral Class (Estimated)
 				Output: %s
-				(Based on effective temperature: %.0f K)""", mkLabel(), temperatureK);
+				(Based on effective temperature: %.0fK)""", mkLabel(), temperatureK);
 	}
 
 	/**

@@ -60,6 +60,7 @@ enum SpectralTemperatureBand {
 		if (Double.isInfinite(hi)) {
 			hi = 50000; // practical upper cap for subtype estimation
 		}
+		
 		// Avoid divide-by-zero (Y band min is 0)
 		if (hi <= lo + 1e-9) {
 			return 0;
@@ -67,10 +68,13 @@ enum SpectralTemperatureBand {
 
 		double x = (hi - temperatureK) / (hi - lo); // 0 at hi, 1 at lo
 		int subtype = (int) Math.floor(x * 10.0);
+		// Subtype must strictly be between 0 and 9.
 		if (subtype < 0)
 			subtype = 0;
+		
 		if (subtype > 9)
 			subtype = 9;
+		
 		return subtype;
 	}
 }
