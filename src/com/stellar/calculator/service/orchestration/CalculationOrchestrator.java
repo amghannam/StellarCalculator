@@ -2,7 +2,6 @@ package com.stellar.calculator.service.orchestration;
 
 import java.util.Objects;
 
-import com.stellar.calculator.domain.model.Star;
 import com.stellar.calculator.io.input.InputReader;
 import com.stellar.calculator.io.output.ResultPrinter;
 import com.stellar.calculator.service.api.CalculationService;
@@ -40,7 +39,7 @@ public class CalculationOrchestrator {
 	 */
 	public void process() {
 		try {
-			Star star = inputReader.readStarParameters();
+			var star = inputReader.readStarParameters();
 			var results = calculationService.calculateAll(star);
 			resultPrinter.printResults(star, results); // Now passing both star and results
 		} catch (Exception e) {
