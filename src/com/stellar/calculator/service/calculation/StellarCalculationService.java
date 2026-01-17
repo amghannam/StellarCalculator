@@ -75,7 +75,7 @@ public class StellarCalculationService implements CalculationService {
 	 */
 	@Override
 	public void registerCalculator(Calculator<Star, ? extends CalculationResult> calculator) {
-		Objects.requireNonNull("calculator cannot be null");
+		Objects.requireNonNull(calculator, "calculator cannot be null");
 		calculators.add(calculator);
 	}
 }
